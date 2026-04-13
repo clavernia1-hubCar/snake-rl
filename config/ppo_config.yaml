@@ -1,0 +1,41 @@
+agent:
+  lr: 3.0e-4
+  gamma: 0.99
+  gae_lambda: 0.95          # GAE λ — controls bias/variance trade-off
+  clip_eps: 0.2             # PPO clip range
+  value_coef: 0.5           # Weight on value loss
+  entropy_coef: 0.02        # High entropy → forces exploration, prevents circling
+  max_grad_norm: 0.5
+  n_epochs: 4               # PPO epochs per rollout
+  hidden_dim: 512
+
+training:
+  num_envs: 32
+  rollout_steps: 128        # Steps collected per env per update (32×128 = 4096 transitions)
+  minibatch_size: 512       # Must divide num_envs × rollout_steps = 4096
+  eval_frequency: 50        # Updates between evaluations
+  eval_episodes: 100        # Episodes per evaluation
+  total_updates: 100000     # ~100k updates × 4096 transitions = 409M env steps total
+  checkpoint_dir: checkpoints_ppo
+  log_dir: logs_ppo
+
+# Curriculum: train on progressively larger grids.
+# The same network weights transfer between stages (AdaptiveAvgPool handles variable input).
+# Graduate to next stage when eval mean score >= graduate_score,
+# or when max_updates for the stage are exhausted.
+curriculum:
+  - grid_size: 6
+    graduate_score: 4.0     # Snake reliably eating 4 food on a 6×6 board
+    max_updates: 4000
+  - grid_size: 7
+    graduate_score: 8.0
+    max_updates: 6000
+  - grid_size: 8
+    graduate_score: 14.0
+    max_updates: 10000
+  - grid_size: 9
+    graduate_score: 22.0
+    max_updates: 15000
+  - grid_size: 10
+    graduate_score: 999     # Never force-graduate on final stage
+    max_updates: 65000      # ~65k updates left for the full 10×10 problem

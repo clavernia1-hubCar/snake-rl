@@ -1,0 +1,30 @@
+environment:
+  grid_size: 10
+
+agent:
+  lr: 0.0003
+  gamma: 0.99
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay_episodes: 20000
+  tau: 0.005
+  batch_size: 256
+  train_frequency: 4
+  warmup_steps: 2000
+  hidden_dim: 512
+  n_step: 5
+
+replay_buffer:
+  capacity: 100000
+  alpha: 0.6
+  beta_start: 0.4
+  beta_end: 1.0
+
+training:
+  total_episodes: 100000
+  num_envs: 32
+  eval_frequency: 500
+  eval_episodes: 50
+  checkpoint_dir: checkpoints
+  log_dir: logs
+  log_frequency: 10
