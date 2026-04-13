@@ -28,7 +28,7 @@ class PPOAgent:
         gae_lambda: float = 0.95,
         clip_eps: float = 0.2,
         value_coef: float = 0.5,
-        entropy_coef: float = 0.02,
+        entropy_coef: float = 0.3,
         max_grad_norm: float = 0.5,
         n_epochs: int = 4,
         hidden_dim: int = 512,

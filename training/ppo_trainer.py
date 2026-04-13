@@ -176,6 +176,10 @@ def train_ppo(cfg: dict, resume: str | None = None) -> PPOAgent:
     total_updates   = train_cfg["total_updates"]
     init_lr         = agent_cfg["lr"]
 
+    # Entropy decay: start high for exploration, taper to floor by end of training
+    ent_start = agent_cfg.get("entropy_coef_start", agent_cfg.get("entropy_coef", 0.1))
+    ent_end   = agent_cfg.get("entropy_coef_end",   0.02)
+
     os.makedirs(checkpoint_dir, exist_ok=True)
     os.makedirs(log_dir, exist_ok=True)
 
@@ -218,9 +222,10 @@ def train_ppo(cfg: dict, resume: str | None = None) -> PPOAgent:
 
         while stage_update < stage_max_upd and global_update < total_updates:
 
-            # ---- Linear LR annealing ----
+            # ---- Linear LR + entropy annealing ----
             frac = max(0.0, 1.0 - global_update / total_updates)
             agent.set_lr(init_lr * frac)
+            agent.entropy_coef = ent_end + (ent_start - ent_end) * frac
 
             # ---- Allocate rollout buffers ----
             # Observations are always padded to 10×10 by _PadObs wrapper

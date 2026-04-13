@@ -4,7 +4,8 @@ agent:
   gae_lambda: 0.95          # GAE λ — controls bias/variance trade-off
   clip_eps: 0.2             # PPO clip range
   value_coef: 0.5           # Weight on value loss
-  entropy_coef: 0.1         # High entropy → forces exploration, prevents circling
+  entropy_coef_start: 0.3   # Start high → forces exploration on early/harder grids
+  entropy_coef_end: 0.02    # Decay to this by end of training — lets policy sharpen up
   max_grad_norm: 0.5
   n_epochs: 4               # PPO epochs per rollout
   hidden_dim: 512
