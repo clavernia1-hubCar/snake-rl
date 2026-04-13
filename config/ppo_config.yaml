@@ -25,17 +25,17 @@ training:
 # or when max_updates for the stage are exhausted.
 curriculum:
   - grid_size: 6
-    graduate_score: 4.0     # Snake reliably eating 4 food on a 6×6 board
-    max_updates: 4000
-  - grid_size: 7
-    graduate_score: 8.0
+    graduate_score: 8.0     # ~25% of 6x6 grid filled
     max_updates: 6000
-  - grid_size: 8
-    graduate_score: 14.0
+  - grid_size: 7
+    graduate_score: 15.0    # ~33% of 7x7 grid filled
     max_updates: 10000
-  - grid_size: 9
-    graduate_score: 22.0
+  - grid_size: 8
+    graduate_score: 25.0    # ~38% of 8x8 grid filled
     max_updates: 15000
+  - grid_size: 9
+    graduate_score: 38.0    # ~46% of 9x9 grid filled
+    max_updates: 20000
   - grid_size: 10
     graduate_score: 999     # Never force-graduate on final stage
     max_updates: 65000      # ~65k updates left for the full 10×10 problem
